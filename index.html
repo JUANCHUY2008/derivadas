@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(-45deg, #ff0000, #cc0000, #ff3333, #990000);
+            background: linear-gradient(-45deg, #0044ff, #0022aa, #3366ff, #001155);
             background-size: 400% 400%;
             animation: fondoAnimado 12s ease infinite;
             color: #000000;
@@ -28,7 +28,7 @@
 
         .container {
             text-align: center;
-            background-color: rgba(255, 42, 42, 0.85);
+            background-color: rgba(42, 141, 255, 0.85);
             backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 20px;
@@ -38,9 +38,9 @@
             border: 3px solid #000000;
         }
 
-        /* Botones Naranjas */
+        /* Botones Verdes */
         button {
-            background-color: #ff6600;
+            background-color: #00cc44;
             color: #000000;
             border: 3px solid #000000;
             padding: 14px 28px;
@@ -54,7 +54,7 @@
         }
 
         button:hover {
-            background-color: #ff8533;
+            background-color: #33ff77;
             transform: translateY(-2px);
             box-shadow: 0 6px 0 #000000;
         }
@@ -158,7 +158,7 @@
             </div>
 
             <button id="btn-calcular">Calcular Derivada</button>
-            <button id="btn-volver" style="background-color: #cc5200;">Volver</button>
+            <button id="btn-volver" style="background-color: #009933;">Volver</button>
 
             <div id="resultado-box">
                 <h3>Procedimiento paso a paso:</h3>
@@ -276,7 +276,7 @@
             // Renderizar resultado decorado
             htmlPasos += `
                 <div class="paso" style="font-size: 1.3rem; margin-top: 15px; border-top: 2px dashed #000000; padding-top: 10px;">
-                    <b>f'(x) = </b> <span style="color: #ff6600; font-weight: bold;">${resultadoFinal}</span>
+                    <b>f'(x) = </b> <span style="color: #00cc44; font-weight: bold;">${resultadoFinal}</span>
                 </div>
             `;
 
