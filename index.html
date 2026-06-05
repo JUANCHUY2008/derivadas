@@ -176,6 +176,15 @@
             font-size: 1.15rem;
             line-height: 1.6;
         }
+
+        /* Estilo para los botones de alternancia de vista rápida */
+        .btn-vista-rapida {
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            box-shadow: 0 3px 0 #000000;
+        }
     </style>
 </head>
 <body>
@@ -190,7 +199,7 @@
         <div id="calculadora" class="screen">
             <h2 style="font-size: 1.5rem; text-transform: uppercase; margin-bottom: 20px;">Formulario de Derivadas</h2>
             
-            <div style="margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+            <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
                 <div>
                     <label style="font-weight: bold;">Tipo: </label>
                     <select id="tipo-derivada">
@@ -207,6 +216,11 @@
                         <option value="division">División (Fracción)</option>
                     </select>
                 </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <button id="btn-vista-lineal" class="btn-vista-rapida" type="button">Ir a Operación Libre</button>
+                <button id="btn-vista-division" class="btn-vista-rapida" type="button" style="background-color: #3498db; color: white;">Ir a División (Fracción)</button>
             </div>
 
             <div class="opcion-bloque" id="area-ecuacion">
@@ -234,6 +248,10 @@
         const areaEcuacion = document.getElementById('area-ecuacion');
         const resultadoBox = document.getElementById('resultado-box');
         const pasosDiv = document.getElementById('pasos-derivada');
+
+        // Botones rápidos de estructura sugeridos por el usuario
+        const btnVistaLineal = document.getElementById('btn-vista-lineal');
+        const btnVistaDivision = document.getElementById('btn-vista-division');
 
         // Memorias de entrada
         let memoriaLineal = "4x3";
@@ -287,9 +305,21 @@
             });
         }
 
+        // Manejadores de los botones de cambio rápido de estructura
+        btnVistaLineal.addEventListener('click', () => {
+            tipoEstructura.value = 'sencilla';
+            actualizarInterfazGrafica();
+            resultadoBox.style.display = 'none';
+        });
+
+        btnVistaDivision.addEventListener('click', () => {
+            tipoEstructura.value = 'division';
+            actualizarInterfazGrafica();
+            resultadoBox.style.display = 'none';
+        });
+
         // Detectar cambios en los selectores
         tipoDerivada.addEventListener('change', () => {
-            // Ajustar valores sugeridos según la función para facilitar las pruebas
             const t = tipoDerivada.value;
             if (t === 'potencia') { memoriaLineal = "4x3"; memoriaDen = "4x3"; }
             else if (t === 'seno') { memoriaLineal = "2sin(5x)"; memoriaDen = "sin(5x)"; }
@@ -333,9 +363,8 @@
                 n = expPart === "" ? 1 : parseFloat(expPart);
                 return { a, n };
             } else {
-                // Para trigonométricas y logaritmos (Ej: "2sin5x" o "cos5x")
                 let tag = tipo === 'seno' ? 'sin' : (tipo === 'coseno' ? 'cos' : 'ln');
-                if (!limpio.includes(tag)) limpio = tag + limpio; // Autocorrección básica
+                if (!limpio.includes(tag)) limpio = tag + limpio;
 
                 let partes = limpio.split(tag);
                 if (partes[0] === "") a = 1;
@@ -367,17 +396,14 @@
                 let den = document.getElementById('val-dv').value.trim();
                 if (!num || !den) { alert("Completa ambos términos de la fracción."); return; }
                 
-                // Analizamos el denominador y si el numerador es una constante diferente de 1, afecta el coeficiente
                 let factorNum = parseFloat(num) || 1;
                 datos = extraerParametros(den, opc);
                 
                 if (opc === 'potencia') {
-                    // Propiedad de los exponentes: 1 / x^n = x^(-n)
                     datos.n = -datos.n;
                     datos.a = factorNum / datos.a;
                     htmlPasos += `<div class="paso" style="color: #0022aa; font-weight: bold;">➔ Simplificación de Fracción:<br> Subimos la potencia al numerador cambiando el signo de su exponente: f(x) = ${datos.a}x<sup>${datos.n}</sup></div>`;
                 } else {
-                    // Para sin, cos, ln en el denominador (Regla de potencia compuesta u^-1)
                     htmlPasos += `<div class="paso" style="color: #0022aa; font-weight: bold;">➔ Nota de Estructura Fraccionaria:<br> Al estar la función en el denominador, se resuelve mediante regla de la cadena exponencial (u⁻¹). A nivel bachillerato lineal directo, se recomienda analizar la función de forma directa.</div>`;
                 }
             }
@@ -420,13 +446,11 @@
                 resultadoFinal = `${datos.a}/x`;
             }
 
-            // Si originalmente era una fracción no algebraica y no se simplificó por potencia, se le denota su inverso
             if (esFraccion && opc !== 'potencia') {
                 resultadoFinal = `[ ${resultadoFinal} ] / (${document.getElementById('val-dv').value})²`;
                 htmlPasos += `<div class="paso"><b>Nota:</b> Se aplicó la estructura divisoria complementaria sobre el denominador al cuadrado.</div>`;
             }
 
-            // Inyectar bloque final estructurado
             htmlPasos += `
                 <div class="paso" style="font-size: 1.3rem; margin-top: 15px; border-top: 2px dashed #000000; padding-top: 10px;">
                     <b>Resultado Estructurado f'(x) = </b> <span style="color: #00cc44; font-weight: bold;">${resultadoFinal}</span>
